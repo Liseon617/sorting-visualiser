@@ -1,7 +1,9 @@
 const n = 50;
 const array = [];
-init();
 let audioCtx = null;
+let playing = false;
+init();
+
 
 function playNote(freq){
   if (audioCtx == null){
@@ -26,19 +28,25 @@ function init() {
     array[i] = Math.random();
   }
   showBars();
+  playing = false;
 }
 
-function play() {
-  const copy = [...array];
-  const moves = bubbleSort(copy);
-  animate(moves);
+function bubbleSort_play() {
+  if(playing == false){
+    playing = !playing;
+    const copy = [...array];
+    const moves = bubbleSort(copy);
+    animate(moves);
+  }
 }
 
 function animate(moves) {
-  if (moves.length == 0) {
+  if (moves.length == 0 || playing == false) {
     showBars();
+    playing = false;
     return;
   }
+
   const move = moves.shift();
   const [i, j] = move.indices
   if(move.type == "swap"){
@@ -52,6 +60,20 @@ function animate(moves) {
   setTimeout(function () {
     animate(moves);
   }, 100); //100 milliseconds
+}
+
+function showBars(move) {
+  container.innerHTML = "";
+  for (let i = 0; i < array.length; i++) {
+    const bar = document.createElement("div");
+    bar.style.height = array[i] * 100 + "%";
+    bar.classList.add("bar");
+    //highlight swapped parts of the array
+    if(move && move.indices.includes(i)){
+      bar.style.backgroundColor = move.type=="swap" ? "red" : "blue";
+    }
+    container.appendChild(bar);
+  }
 }
 
 //bubble sort
@@ -77,16 +99,4 @@ function bubbleSort(array) {
   return moves;
 }
 
-function showBars(move) {
-  container.innerHTML = "";
-  for (let i = 0; i < array.length; i++) {
-    const bar = document.createElement("div");
-    bar.style.height = array[i] * 100 + "%";
-    bar.classList.add("bar");
-    //highlight swapped parts of the array
-    if(move && move.indices.includes(i)){
-      bar.style.backgroundColor = move.type=="swap" ? "red" : "blue";
-    }
-    container.appendChild(bar);
-  }
-}
+//insert sort
