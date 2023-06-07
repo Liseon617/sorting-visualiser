@@ -31,21 +31,20 @@ function init() {
   playing = false;
 }
 
-function bubbleSort_play() {
+function play(sortType) {
   if (playing == false) {
     playing = !playing;
     const copy = [...array];
-    const moves = bubbleSort(copy);
+    let moves;
+    if(sortType == "bubbleSort"){
+      moves = bubbleSort(copy);
+    } else if(sortType == "insertionSort"){
+      moves = insertSort(copy);
+    } else if(sortType == "quickSort"){
 
-    animate(moves);
-  }
-}
+    } else if(sortType == "bucketSort"){
 
-function insertionSort_play() {
-  if (playing == false) {
-    playing = !playing;
-    const copy = [...array];
-    const moves = insertSort(copy);
+    }
 
     animate(moves);
   }
@@ -70,7 +69,7 @@ function animate(moves) {
   showBars(move);
   setTimeout(function () {
     animate(moves);
-  }, 10); //100 milliseconds
+  }, 50); //100 milliseconds
 }
 
 function showBars(move) {
@@ -133,4 +132,36 @@ function insertSort(array) {
     });
   }
   return moves;
+}
+
+//quick sort
+function quickSort(array) {
+  let pivot = array[array.length - 1];
+  let leftPointer = 0 ;
+  let rightPointer = array.length - 1;
+
+  function swap(array, index1, index2){
+    let temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  }
+
+  while(leftPointer < rightPointer){
+    //walking from the left side
+    //ensure that the values on the left of the pointer is less than the pivot
+    while(array[leftPointer] <= pivot && leftPointer < rightPointer){
+      leftPointer++;
+    }
+
+    //walking from the right side
+    //ensure that the values on the right of the pointer is more than the pivot
+    while(array[rightPointer] >= pivot && rightPointer > leftPointer){
+      rightPointer--;
+    }
+    
+    swap(array, leftPointer, rightPointer);
+  }
+  swap(array, leftPointer, array.length - 1);
+
+  //recursive element
 }
